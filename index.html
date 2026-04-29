@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tip Calculator</title>
+    <title>Sunrise & Sunset Dashboard</title>
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>Tip Calculator</h1>
+<header>
+    <h1>Sunrise & Sunset Dashboard</h1>
+</header>
 
-<form id="tipForm">
+<main>
 
-    <p>Currency conversion:</p>
-    <p>$1 USD = €0.95 EUR for Euros</p>
-    <p>$1 USD = ₹85 INR for Rupees</p>
+    <section id="controls">
+        <h2>Select Location</h2>
 
-    <label for="bill">Bill Total: $</label>
-    <input type="text" id="bill" placeholder="Enter amount">
+        <select id="locationSelect">
+            <option value="">-- Choose a City --</option>
+        </select>
 
-    <label>Total Bill with Tax (11%):</label>
-    <input type="text" id="totalTax" disabled>
+        <button id="getDataBtn">Get Data</button>
+    </section>
 
-    <label for="currency">Select Currency:</label>
-    <select id="currency">
-        <option value="inr">Indian Rupee</option>
-        <option value="eur">Euro</option>
-    </select>
+    <section id="dashboard">
 
-    <label for="tipRange">Tip</label>
-    <div class="slider-container">
-        <input type="range" id="tipRange" min="0" max="100" value="0">
-        <span id="tipDisplay">0%</span>
-    </div>
+        <div>
+            <h2>Today</h2>
+            <p id="today-sunrise">--</p>
+        </div>
 
-    <label>Converted Tip Amount:</label>
-    <input type="text" id="tipAmount" disabled>
+        <div>
+            <h2>Tomorrow</h2>
+            <p id="tomorrow-sunrise">--</p>
+        </div>
 
-    <label>Converted Total Bill with Tip and Tax:</label>
-    <input type="text" id="totalTip" disabled>
+    </section>
 
-</form>
+</main>
+
+<footer>
+    <p>Data provided by SunriseSunset.io API</p>
+</footer>
 
 <script src="script.js"></script>
+
 </body>
 </html>
