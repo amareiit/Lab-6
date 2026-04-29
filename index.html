@@ -5,47 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sunrise & Sunset Dashboard</title>
 
+   
     <link rel="stylesheet" href="styles.css">
+
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header>
-    <h1>Sunrise & Sunset Dashboard</h1>
-</header>
+   
+    <header>
+        <h1>Sunrise & Sunset Dashboard</h1>
+        <p class="subtitle">Track daylight cycles anywhere</p>
+    </header>
 
-<main>
+    
+    <main>
 
-    <section id="controls">
-        <h2>Select Location</h2>
+       
+        <section id="controls" class="card">
+            <h2>Select Location</h2>
 
-        <select id="locationSelect">
-            <option value="">-- Choose a City --</option>
-        </select>
+            <select id="locationSelect">
+                <option value="">-- Choose a City --</option>
 
-        <button id="getDataBtn">Get Data</button>
-    </section>
+               
+                <option value="40.7128,-74.0060">New York, NY</option>
+                <option value="34.0522,-118.2437">Los Angeles, CA</option>
+                <option value="41.8781,-87.6298">Chicago, IL</option>
+                <option value="29.7604,-95.3698">Houston, TX</option>
+                <option value="25.7617,-80.1918">Miami, FL</option>
 
-    <section id="dashboard">
+                
+                <option value="-33.9249,18.4241">Cape Town</option>
+                <option value="-26.2041,28.0473">Johannesburg</option>
+                <option value="-29.8587,31.0218">Durban</option>
+                <option value="-25.7479,28.2293">Pretoria</option>
+                <option value="-33.9608,25.6022">Port Elizabeth</option>
+            </select>
 
-        <div>
-            <h2>Today</h2>
-            <p id="today-sunrise">--</p>
-        </div>
+            <button id="getDataBtn">Get Sunrise & Sunset</button>
+        </section>
 
-        <div>
-            <h2>Tomorrow</h2>
-            <p id="tomorrow-sunrise">--</p>
-        </div>
 
-    </section>
+        <section id="dashboard">
 
-</main>
 
-<footer>
-    <p>Data provided by SunriseSunset.io API</p>
-</footer>
+            <div class="card">
+                <h2>Today</h2>
+                <div class="data-grid">
 
-<script src="script.js"></script>
+                    <div><span>Sunrise</span><p id="today-sunrise">--</p></div>
+                    <div><span>Sunset</span><p id="today-sunset">--</p></div>
+                    <div><span>Dawn</span><p id="today-dawn">--</p></div>
+                    <div><span>Dusk</span><p id="today-dusk">--</p></div>
+                    <div><span>Solar Noon</span><p id="today-noon">--</p></div>
+                    <div><span>Day Length</span><p id="today-length">--</p></div>
+                    <div><span>Time Zone</span><p id="today-timezone">--</p></div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Tomorrow</h2>
+                <div class="data-grid">
+
+                    <div><span>Sunrise</span><p id="tomorrow-sunrise">--</p></div>
+                    <div><span>Sunset</span><p id="tomorrow-sunset">--</p></div>
+                    <div><span>Dawn</span><p id="tomorrow-dawn">--</p></div>
+                    <div><span>Dusk</span><p id="tomorrow-dusk">--</p></div>
+                    <div><span>Solar Noon</span><p id="tomorrow-noon">--</p></div>
+                    <div><span>Day Length</span><p id="tomorrow-length">--</p></div>
+                    <div><span>Time Zone</span><p id="tomorrow-timezone">--</p></div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Data by SunriseSunset.io API</p>
+    </footer>
+
+
+    <script src="script.js"></script>
 
 </body>
 </html>
