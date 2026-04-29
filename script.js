@@ -1,61 +1,67 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const button = document.getElementById("getDataBtn");
     const select = document.getElementById("locationSelect");
+    const errorBox = document.getElementById("error-message");
+    const errorText = document.getElementById("error-text");
 
     button.addEventListener("click", async function () {
-
         const value = select.value;
-
         if (!value) {
             alert("Select a location to begin.");
             return;
         }
 
+
+        errorBox.hidden = true;
+        errorText.textContent = "";
+
         const [lat, lng] = value.split(",");
 
-        const url = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}`;
+
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+        const todayUrl = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}`;
+        const tomorrowUrl = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}&date=${tomorrowStr}`;
 
         try {
-            const response = await fetch(url);
-            const data = await response.json();
 
-            if (!data || data.status !== "OK") {
+            const [todayRes, tomorrowRes] = await Promise.all([
+                fetch(todayUrl),
+                fetch(tomorrowUrl)
+            ]);
+
+            const todayData = await todayRes.json();
+            const tomorrowData = await tomorrowRes.json();
+
+            if (todayData.status !== "OK" || tomorrowData.status !== "OK") {
                 throw new Error("Invalid API response");
             }
 
-            const results = data.results;
+            const t = todayData.results;
+            const tm = tomorrowData.results;
 
-            document.getElementById("today-sunrise").textContent = results.sunrise || "--";
-            document.getElementById("today-sunset").textContent = results.sunset || "--";
-            document.getElementById("today-dawn").textContent = results.dawn || "--";
-            document.getElementById("today-dusk").textContent = results.dusk || "--";
-            document.getElementById("today-noon").textContent = results.solar_noon || "--";
-            document.getElementById("today-length").textContent = results.day_length || "--";
-            document.getElementById("today-timezone").textContent = results.timezone || "--";
+            document.getElementById("today-sunrise").textContent = t.sunrise || "--";
+            document.getElementById("today-sunset").textContent = t.sunset || "--";
+            document.getElementById("today-dawn").textContent = t.dawn || "--";
+            document.getElementById("today-dusk").textContent = t.dusk || "--";
+            document.getElementById("today-noon").textContent = t.solar_noon || "--";
+            document.getElementById("today-length").textContent = t.day_length || "--";
+            document.getElementById("today-timezone").textContent = t.timezone || "--";
 
-            const tomorrow = results.next_day || {};
-
-            document.getElementById("tomorrow-sunrise").textContent = tomorrow.sunrise || "--";
-            document.getElementById("tomorrow-sunset").textContent = tomorrow.sunset || "--";
-            document.getElementById("tomorrow-dawn").textContent = tomorrow.dawn || "--";
-            document.getElementById("tomorrow-dusk").textContent = tomorrow.dusk || "--";
-            document.getElementById("tomorrow-noon").textContent = tomorrow.solar_noon || "--";
-            document.getElementById("tomorrow-length").textContent = tomorrow.day_length || "--";
-            document.getElementById("tomorrow-timezone").textContent = results.timezone || "--";
+            document.getElementById("tomorrow-sunrise").textContent = tm.sunrise || "--";
+            document.getElementById("tomorrow-sunset").textContent = tm.sunset || "--";
+            document.getElementById("tomorrow-dawn").textContent = tm.dawn || "--";
+            document.getElementById("tomorrow-dusk").textContent = tm.dusk || "--";
+            document.getElementById("tomorrow-noon").textContent = tm.solar_noon || "--";
+            document.getElementById("tomorrow-length").textContent = tm.day_length || "--";
+            document.getElementById("tomorrow-timezone").textContent = tm.timezone || "--";
 
         } catch (error) {
             console.error(error);
-
-
-            document.getElementById("dashboard").innerHTML = `
-                <div class="card">
-                    <h2>Error</h2>
-                    <p>Data not available. Select a different location.</p>
-                </div>
-            `;
+            errorText.textContent = "Data not available. Please select a different location and try again.";
+            errorBox.hidden = false;
         }
-
     });
-
 });
