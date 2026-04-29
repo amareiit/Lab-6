@@ -1,54 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    const billInput = document.getElementById("bill");
-    const tipRange = document.getElementById("tipRange");
-    const tipDisplay = document.getElementById("tipDisplay");
-    const tipAmount = document.getElementById("tipAmount");
-    const totalTax = document.getElementById("totalTax");
-    const totalTip = document.getElementById("totalTip");
-    const currency = document.getElementById("currency");
+    const button = document.getElementById("getDataBtn");
+    const select = document.getElementById("locationSelect");
 
-    billInput.addEventListener("input", calculate);
-    tipRange.addEventListener("input", calculate);
-    currency.addEventListener("change", calculate);
+    button.addEventListener("click", async function () {
 
-    function calculate() {
-        let bill = parseFloat(billInput.value);
-        let tip = parseFloat(tipRange.value);
+        const value = select.value;
 
-        // Always update slider display
-        tipDisplay.textContent = tip + "%";
-
-        // Validation
-        if (isNaN(bill) || bill < 0) {
-            resetFields();
+        if (!value) {
+            alert("Select a location to begin.");
             return;
         }
 
-        if (bill === 0) {
-            resetFields();
-            return;
+        const [lat, lng] = value.split(",");
+
+        const url = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (!data || data.status !== "OK") {
+                throw new Error("Invalid API response");
+            }
+
+            const results = data.results;
+
+            document.getElementById("today-sunrise").textContent = results.sunrise || "--";
+            document.getElementById("today-sunset").textContent = results.sunset || "--";
+            document.getElementById("today-dawn").textContent = results.dawn || "--";
+            document.getElementById("today-dusk").textContent = results.dusk || "--";
+            document.getElementById("today-noon").textContent = results.solar_noon || "--";
+            document.getElementById("today-length").textContent = results.day_length || "--";
+            document.getElementById("today-timezone").textContent = results.timezone || "--";
+
+            const tomorrow = results.next_day || {};
+
+            document.getElementById("tomorrow-sunrise").textContent = tomorrow.sunrise || "--";
+            document.getElementById("tomorrow-sunset").textContent = tomorrow.sunset || "--";
+            document.getElementById("tomorrow-dawn").textContent = tomorrow.dawn || "--";
+            document.getElementById("tomorrow-dusk").textContent = tomorrow.dusk || "--";
+            document.getElementById("tomorrow-noon").textContent = tomorrow.solar_noon || "--";
+            document.getElementById("tomorrow-length").textContent = tomorrow.day_length || "--";
+            document.getElementById("tomorrow-timezone").textContent = results.timezone || "--";
+
+        } catch (error) {
+            console.error(error);
+
+
+            document.getElementById("dashboard").innerHTML = `
+                <div class="card">
+                    <h2>Error</h2>
+                    <p>Data not available. Select a different location.</p>
+                </div>
+            `;
         }
 
-        let tipAmt = (bill * tip) / 100;
-        let tax = bill * 0.11;
-
-        let totalWithTax = bill + tax;
-        let totalWithTipAndTax = bill + tax + tipAmt;
-
-        let rate = 1;
-        if (currency.value === "inr") rate = 85;
-        if (currency.value === "eur") rate = 0.95;
-
-        tipAmount.value = (tipAmt * rate).toFixed(2);
-        totalTax.value = (totalWithTax * rate).toFixed(2);
-        totalTip.value = (totalWithTipAndTax * rate).toFixed(2);
-    }
-
-    function resetFields() {
-        tipAmount.value = "";
-        totalTax.value = "";
-        totalTip.value = "";
-    }
+    });
 
 });
